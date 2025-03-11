@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* li {
+	margin-left: 16px;
+}
+
+a {
+	cursor: pointer;
+}
+
+.editor {
+	max-width: 991px;
+	width: 100%;
+	background: #fff;
+	border-radius: 8px;
+	overflow: hidden;
+    border: 1px solid rgba(145, 158, 171, .32);
+}
+.toolbar {
+	padding: 16px;
+	background: #eee;
+}
+.toolbar .head {
+	display: flex;
+	grid-gap: 10px;
+	margin-bottom: 16px;
+	flex-wrap: wrap;
+}
+.toolbar .head > input {
+	max-width: 100px;
+	padding: 6px 10px;
+	border-radius: 6px;
+	border: 2px solid #ddd;
+	outline: none;
+}
+.toolbar .head select {
+	background: #fff;
+	border: 2px solid #ddd;
+	border-radius: 6px;
+	outline: none;
+	cursor: pointer;
+}
+.toolbar .head .color {
+	background: #fff;
+	border: 2px solid #ddd;
+	border-radius: 6px;
+	outline: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	grid-gap: 6px;
+	padding: 0 10px;
+}
+.toolbar .head .color span {
+	font-size: 14px;
+}
+.toolbar .head .color input {
+	border: none;
+	padding: 0;
+    border-radius: 6px;
+	width: 26px;
+	height: 26px;
+	background: #fff;
+	cursor: pointer;
+}
+.toolbar .head .color input::-moz-color-swatch {
+	width: 20px;
+	height: 20px;
+	border: none;
+	border-radius: 50%;
+}
+.toolbar .btn-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	grid-gap: 10px;
+}
+.toolbar .btn-toolbar button {
+	background: #fff;
+	border: 2px solid #ddd;
+	border-radius: 6px;
+	cursor: pointer;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 18px;
+}
+.toolbar .btn-toolbar button:hover {
+	background: #f3f3f3;
+}
+
+#show-code[data-active="true"] {
+	background: #eee;
+} */
+
+
+.editors {
+	max-width: 991px;
+	width: 100%;
+	background: #fff;
+	border-radius: 8px;
+	overflow: hidden;
+    border: 1px solid rgba(145, 158, 171, .32);
+}
+.options {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	/* justify-content: center; */
+	gap: 15px;
+	background: #ebe6e6;
+}
+
+ul.custom-list {
+    list-style: disc; /* ou autre type de list-style que vous souhaitez */
+}
+ol.custom-list {
+    list-style: decimal; /* ou autre type de list-style que vous souhaitez */
+}
+
+.options button {
+	height: 28px;
+	width: 28px;
+	display: grid;
+	place-items: center;
+	border-radius: 3px;
+	border: none;
+	background-color: #ebe6e6;
+	outline: none;
+	color: #020929;
+}
+.options button:hover {
+	background-color: #dddcdc;
+}
+select {
+	padding: 7px;
+	border: 1px solid #020929;
+	border-radius: 3px;
+}
+.options label,
+.options select {
+	font-family: "Poppins", sans-serif;
+	background-color: #ebe6e6;
+}
+.input-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+input[type="color"] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	background-color: transparent;
+	width: 40px;
+	height: 28px;
+	border: none;
+	cursor: pointer;
+}
+input[type="color"]::-webkit-color-swatch {
+	border-radius: 15px;
+	box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #020929;
+}
+input[type="color"]::-moz-color-swatch {
+	border-radius: 15px;
+	box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #020929;
+}
+#content {
+	margin-top: 10px;
+	border: 1px solid #dddddd;
+	padding: 20px;
+	height: 50vh;
+}
+.editors .active {
+	background-color: #e0e9ff;
+}
