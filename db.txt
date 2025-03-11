@@ -1,0 +1,534 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1
+-- Généré le : mer. 03 juil. 2024 à 19:17
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Base de données : `pos`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `achat`
+--
+
+CREATE TABLE `achat` (
+  `achat_id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `cart_id` varchar(255) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `qtt` int(11) NOT NULL DEFAULT 1,
+  `prix` int(11) NOT NULL,
+  `method` varchar(255) NOT NULL,
+  `ref` int(11) NOT NULL,
+  `ip_address` varchar(255) NOT NULL,
+  `achat_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `approuve_date` datetime DEFAULT NULL,
+  `retour_date` datetime DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `admin`
+--
+
+CREATE TABLE `admin` (
+  `ad_id` int(11) NOT NULL,
+  `ad_name` varchar(255) NOT NULL,
+  `ad_email` varchar(255) NOT NULL,
+  `ad_telephone` varchar(20) NOT NULL,
+  `role` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `join_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL,
+  `ad_img` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Déchargement des données de la table `admin`
+--
+
+INSERT INTO `admin` (`ad_id`, `ad_name`, `ad_email`, `ad_telephone`, `role`, `password`, `join_date`, `updated_at`, `ad_img`) VALUES
+(1, 'Khalil', '1234@gmail.com', '', 'Superadmin', '$2y$10$Y55VA/d6or82AK7DO4q9SeDuY8TrFLMo5fvdP2ZoMd89V5ZZFOriy', '2024-04-13 02:50:03', '2024-06-11 16:47:44', 'IMG_0048.jpeg');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `brands`
+--
+
+CREATE TABLE `brands` (
+  `brand_id` int(11) NOT NULL COMMENT 'BRAND ID',
+  `brand_code` varchar(255) NOT NULL,
+  `brand_name` varchar(64) NOT NULL,
+  `brand_slug` varchar(255) NOT NULL,
+  `description` longtext NOT NULL,
+  `brand_img` varchar(255) NOT NULL,
+  `brand_status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `brand_created_at` datetime DEFAULT current_timestamp(),
+  `brand_updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Déchargement des données de la table `brands`
+--
+
+INSERT INTO `brands` (`brand_id`, `brand_code`, `brand_name`, `brand_slug`, `description`, `brand_img`, `brand_status`, `brand_created_at`, `brand_updated_at`) VALUES
+(1, 'BR074500981', 'SMART TECHNOLOGY', 'br-smart-technology', '', 'noimage.png', 'Active', '2024-04-28 02:55:24', NULL),
+(2, 'BR069865026', 'Apple', 'br-apple', 'Apple Inc. est une entreprise multinationale américaine qui crée et commercialise des produits électroniques grand public, des ordinateurs personnels et des logiciels.', 'apple.jpg', 'Active', '2024-04-30 16:09:52', NULL),
+(3, 'BR043656970', 'HP', 'br-hp', '', 'hp.jpg', 'Active', '2024-04-30 17:55:57', '2024-05-25 00:27:50'),
+(8, 'BR033838472', 'Aiwa', 'br-aiwa', '', 'aiwa.png', 'Active', '2024-05-03 20:32:44', '2024-05-24 19:12:20'),
+(9, 'BR082942218', 'Samsung', 'br-samsung', 'Samsung, une titan mondial de l\'innovation technologique, émerge comme une icône de la révolution numérique. Fondée en 1938, cette entreprise sud-coréenne a évolué à partir d\'une modeste entreprise d\'exportation de fruits à une marque emblématique dans les domaines de l\'électronique grand public, des semi-conducteurs et de la technologie de pointe.\r\n\r\nReconnue pour ses smartphones, ses téléviseurs, ses appareils électroménagers et bien plus encore, Samsung incarne l\'excellence en matière de design et de performance. Sa gamme de produits diversifiée offre des solutions novatrices pour répondre aux besoins variés des consommateurs du monde entier.\r\n\r\nÀ travers sa recherche incessante et son engagement envers l\'innovation, Samsung repousse sans cesse les limites de la technologie, introduisant des avancées telles que les écrans pliables, la connectivité 5G et l\'intelligence artificielle dans ses appareils. La marque s\'efforce également d\'être socialement responsable en intégrant des pratiques durables dans sa production et en soutenant diverses initiatives communautaires.\r\n\r\nAvec sa vision audacieuse et sa capacité à anticiper les besoins futurs, Samsung continue de façonner le paysage technologique mondial et d\'inspirer une nouvelle ère d\'innovation.', 'Samsung_Orig_Wordmark_BLUE_RGB.png', 'Active', '2024-05-29 18:31:47', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `cart`
+--
+
+CREATE TABLE `cart` (
+  `cart_id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `qtt` int(11) NOT NULL DEFAULT 1,
+  `transaction_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `categories`
+--
+
+CREATE TABLE `categories` (
+  `category_id` int(11) NOT NULL COMMENT 'CATEGORIES ID',
+  `category_code` varchar(255) NOT NULL,
+  `category_name` varchar(64) NOT NULL,
+  `cat_slug` varchar(255) NOT NULL,
+  `description` longtext NOT NULL,
+  `cat_img` varchar(255) NOT NULL,
+  `category_status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `cat_created_at` datetime DEFAULT current_timestamp(),
+  `cat_updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Déchargement des données de la table `categories`
+--
+
+INSERT INTO `categories` (`category_id`, `category_code`, `category_name`, `cat_slug`, `description`, `cat_img`, `category_status`, `cat_created_at`, `cat_updated_at`) VALUES
+(1, 'CT077697445', 'Informatique', 'cat-informatique', 'Apple Inc. est une entreprise multinationale américaine qui crée et commercialise des produits électroniques grand public, des ordinateurs personnels et des logiciels.', 'Informatic-Logo.jpeg', 'Active', '2024-04-01 00:27:10', '2024-05-02 18:11:26'),
+(2, 'CT017684162', 'Electronique', 'cat-electronique', '', 'Electronic-Logo.jpeg', 'Active', '2024-04-02 00:27:21', '2024-05-02 18:10:34'),
+(3, 'CT039628591', 'Électroménager', 'cat-electromenager', '', 'Electromenage-Logo.jpeg', 'Active', '2024-04-03 00:27:28', '2024-05-02 18:11:52'),
+(4, 'CT045386411', 'Telephones et Tablettes', 'cat-telephones-et-tablettes', 'Découvrez notre sélection de téléphones et tablettes, conçue pour répondre à tous vos besoins en matière de communication et de technologie portable. Que vous recherchiez un smartphone puissant doté des dernières fonctionnalités, une tablette pratique pou', 'noimage.png', 'Active', '2024-05-15 17:08:29', NULL),
+(5, 'CT063457446', 'Santé & Hygiène', 'cat-sant-hygi-ne', 'Découvrez notre catégorie Santé & Hygiène, dédiée à votre bien-être et à votre hygiène personnelle. Nous vous proposons une sélection soigneusement choisie de produits et d\'articles essentiels pour vous aider à prendre soin de votre santé physique et ment', 'noimage.png', 'Active', '2024-05-15 17:08:57', NULL),
+(6, 'CT054611758', 'Maison et Bureau', 'cat-maison-et-bureau', 'Découvrez notre sélection complète de produits pour la maison et le bureau. Transformez votre espace de vie en un lieu confortable et fonctionnel avec nos articles pour la décoration intérieure, les meubles, l\'éclairage et bien plus encore. Nous proposons', 'noimage.png', 'Active', '2024-05-15 17:09:36', NULL),
+(7, 'CT089427674', 'Sports et Loisirs', 'cat-sports-et-loisirs', 'Sports et Loisirs', 'noimage.png', 'Active', '2024-05-15 17:10:04', NULL),
+(8, 'CT040908566', 'Jeux videos & Consoles', 'cat-jeux-videos-consoles', 'Jeux videos & Consoles', 'noimage.png', 'Active', '2024-05-15 17:11:12', '2024-05-15 17:20:28'),
+(9, 'CT052890337', 'Articles de sport', 'cat-articles-de-sport', 'Articles de sport', 'noimage.png', 'Active', '2024-05-15 18:05:33', '2024-05-24 19:11:13');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `customers`
+--
+
+CREATE TABLE `customers` (
+  `customer_id` int(11) NOT NULL COMMENT 'CUSTOMERS ID',
+  `customer_name` varchar(128) NOT NULL,
+  `customer_email` varchar(64) NOT NULL,
+  `customer_mobile` varchar(16) NOT NULL,
+  `customer_address` varchar(256) NOT NULL,
+  `customer_password` varchar(128) NOT NULL,
+  `customer_status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `reset` enum('true','false') NOT NULL DEFAULT 'false',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Déchargement des données de la table `customers`
+--
+
+INSERT INTO `customers` (`customer_id`, `customer_name`, `customer_email`, `customer_mobile`, `customer_address`, `customer_password`, `customer_status`, `reset`, `created_at`, `updated_at`) VALUES
+(1, 'Khalil', '1234@gmail.com', '', '', '$2y$10$Xu5pM9S/y0IsqmOKPvTakez7KtekNT5TMZaF933ytgrYnmoBYSzZe', 'Active', 'false', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `favoris`
+--
+
+CREATE TABLE `favoris` (
+  `wish_id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `add_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `favoris`
+--
+
+INSERT INTO `favoris` (`wish_id`, `customer_id`, `product_id`, `add_at`, `updated_at`) VALUES
+(1, 1, 2, '2023-12-08 17:43:30', '2023-12-08 17:43:30');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `newsletters`
+--
+
+CREATE TABLE `newsletters` (
+  `id` int(11) NOT NULL COMMENT 'NEWSLETTER ID',
+  `newsletter_email` varchar(128) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL COMMENT 'ORDERS ID',
+  `customer_id` int(11) NOT NULL,
+  `cart_id` varchar(255) NOT NULL,
+  `order_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `sub_total` double NOT NULL,
+  `tax` double NOT NULL,
+  `delivery_charge` int(11) NOT NULL,
+  `discount_amount` double NOT NULL,
+  `grand_total` double NOT NULL,
+  `payment_method` varchar(255) NOT NULL DEFAULT 'Cash On Delivery',
+  `transaction_id` varchar(256) NOT NULL,
+  `transaction_payement` enum('Paid','Unpaid') NOT NULL DEFAULT 'Paid',
+  `status` enum('Pending','Processing','Completed','Cancelling','Cancelled') NOT NULL DEFAULT 'Pending',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `seller` int(11) NOT NULL,
+  `approuve_date` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `oi_id` int(11) NOT NULL COMMENT 'ORDER ITEMS ID',
+  `customer_id` int(11) NOT NULL,
+  `cart_id` varchar(255) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_price` double NOT NULL,
+  `item_quantity` int(11) NOT NULL,
+  `transaction_id` int(11) NOT NULL,
+  `item_status` enum('Completed','Cancelled','Cancelling') NOT NULL DEFAULT 'Completed',
+  `refund` enum('Paid','Unpaid','','') NOT NULL DEFAULT 'Unpaid',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `seller` int(11) NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `products`
+--
+
+CREATE TABLE `products` (
+  `product_id` int(11) NOT NULL COMMENT 'PRODUCTS ID',
+  `sku` varchar(255) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `subcategory_id` int(11) NOT NULL,
+  `brand_id` int(11) NOT NULL DEFAULT 0,
+  `product_name` varchar(128) NOT NULL,
+  `product_slug` varchar(255) NOT NULL,
+  `product_summary` text NOT NULL,
+  `product_details` longtext NOT NULL,
+  `main_image` text NOT NULL,
+  `barcode` varchar(255) NOT NULL,
+  `qrcode` varchar(500) NOT NULL DEFAULT 'test.png',
+  `product_quantity` int(11) NOT NULL,
+  `product_price` int(11) NOT NULL,
+  `product_discount_price` int(11) NOT NULL,
+  `discount_start` date NOT NULL,
+  `discount_ends` date NOT NULL,
+  `product_status` enum('In Stock','Out of Stock') NOT NULL DEFAULT 'In Stock',
+  `product_featured` enum('YES','NO') NOT NULL DEFAULT 'NO',
+  `product_tags` text NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL,
+  `secondary_image_1` varchar(255) DEFAULT NULL,
+  `secondary_image_2` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Déchargement des données de la table `products`
+--
+
+INSERT INTO `products` (`product_id`, `sku`, `category_id`, `subcategory_id`, `brand_id`, `product_name`, `product_slug`, `product_summary`, `product_details`, `main_image`, `barcode`, `qrcode`, `product_quantity`, `product_price`, `product_discount_price`, `discount_start`, `discount_ends`, `product_status`, `product_featured`, `product_tags`, `created_at`, `updated_at`, `secondary_image_1`, `secondary_image_2`) VALUES
+(1, 'PR073985011', 1, 1, 3, 'HP ProBook 17.3 Laptop, Intel Core i5 i5-6200U, 500GB HD, DVD Writer, Windows 7 Professional 2', '864824-hp-probook-17-3-laptop-intel-core-i5-i5-6200u-500gb-hd-dvd-writer-windows-7-professional-2.html', '', '', 'R.jpeg', 'cb-PR073985011.png', 'qr-PR073985011.png', 9, 250000, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '0', '2024-05-03 20:01:39', '2024-05-24 17:18:55', NULL, NULL),
+(2, 'PR034728321', 2, 2, 8, 'Aiwa Téléviseur LED - Ecran 32 - HDMI x 2 USB x 2 - Noir', '879091-aiwa-t-l-viseur-led---ecran-32---hdmi-x-2-usb-x-2---noir.html', '', '', 'tvaiwa.jpg', 'cb-PR034728321.png', 'qr-PR034728321.png', 3, 70450, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '0', '2024-05-03 20:23:36', '2024-05-24 17:17:22', NULL, NULL),
+(3, 'PR056557466', 2, 2, 1, 'SMART TECHNOLOGY Congélateur Horizontal 197 Litres- STCC-230 - Gris', '409450-smart-technology-cong-lateur-horizontal-197-litres--stcc-230---gris.html', '', '', 'chorzon.jpg', 'cb-PR056557466.png', 'qr-PR056557466.png', 2, 143500, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '0', '2024-05-03 20:25:34', '2024-05-24 17:20:14', NULL, NULL),
+(4, 'PR067829559', 1, 1, 2, 'MacBook Air 13″ Puce M3', '624890-macbook-air-13-puce-m3.html', '', '', 'model_mba_m3__cfrbip6c05yq_large.jpg', 'cb-PR067829559.png', 'qr-PR067829559.png', 1, 2699000, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '0', '2024-05-03 20:27:17', '2024-05-24 17:17:36', NULL, NULL),
+(5, 'PR058397326', 1, 1, 2, 'MacBook Air 13″ Puce M2', '323827-macbook-air-13-puce-m2.html', '', '', 'model_mba_m2__cfrbip6c05yq_large.jpg', 'cb-PR058397326.png', 'qr-PR058397326.png', 1, 825000, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '0', '2024-05-03 20:28:57', '2024-05-24 17:22:37', NULL, NULL),
+(6, 'PR016128513', 4, 4, 2, 'Ipad Pro', '258857-ipad-pro.html', '', '', 'ipad.jpg', 'cb-PR016128513.png', 'qr-PR016128513.png', 1, 120000, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '0', '2024-05-15 18:39:31', '2024-05-25 00:06:54', NULL, NULL),
+(7, 'PR092789794', 2, 2, 1, 'SMART TECHNOLOGY TV LED 32 Pouces - Full HD - Noir', '078394-smart-technology-tv-led-32-pouces---full-hd---noir.html', '', '', 'SMART TECHNOLOGY TV LED 32 Pouces - Full HD - Noir.jpg', 'cb-PR092789794.png', 'qr-PR092789794.png', 6, 110000, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '0', '2024-05-15 18:49:26', '2024-05-24 17:23:38', NULL, NULL),
+(8, 'PR034950596', 4, 4, 2, 'Iphone 11', '481664-iphone-11.html', '', '', 'iphone11.jpg', 'cb-PR034950596.png', 'qr-PR034950596.png', 3, 130000, 0, '0000-00-00', '0000-00-00', 'In Stock', 'YES', '', '2024-05-27 20:43:42', NULL, 'iphone11.jpg', 'iphone11.jpg'),
+(9, 'PR041908065', 4, 4, 2, 'Iphone 12', '346202-iphone-12.html', '', '\r\n                                            \r\n                                    \r\n                                                                            ', 'iphone12.jpg', 'cb-PR041908065.png', 'qr-PR041908065.png', 3, 230000, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '', '2024-05-28 00:32:32', '2024-05-29 20:44:56', 'iphone12.jpg', 'iphone12.jpg'),
+(10, 'PR018125957', 4, 4, 2, 'Iphone 13', '573840-iphone-13.html', '', '<ul class=\"custom-list\"><li><font face=\"algerian\">Iphone 13                                                                                  </font></li><li><font face=\"ALGERIAN\">Iphone 13</font></li></ul>                                        ', 'iphone12.jpg', 'cb-PR018125957.png', 'qr-PR018125957.png', 2, 200000, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '', '2024-06-08 12:36:20', '2024-06-09 17:54:55', 'iphone12.jpg', 'iphone12.jpg'),
+(11, 'PR022141467', 5, 6, 8, 'Nivea', '875338-nivea.html', '', '\r\n                                            <span style=\"color: rgb(0, 0, 0); font-family: Roboto, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: 0.5px;\">Enrichi en Concentré de Soin et avec 2x plus d’Huile d’Amande Douce naturelle, le lait nourrissant de Nivea nourrit intensément les peaux extra sèches pendant 48h en leur apportant tout le soin dont elles ont besoin.</span>                                        ', 'lcnivea.jpg', 'cb-PR022141467.png', 'qr-PR022141467.png', 12, 2000, 0, '0000-00-00', '0000-00-00', 'In Stock', '', '', '2024-06-10 19:45:06', '2024-06-10 20:02:47', 'lcnivea.jpg', 'lcnivea.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `shippings`
+--
+
+CREATE TABLE `shippings` (
+  `shipping_id` int(11) NOT NULL COMMENT 'SHIPPING ID',
+  `customer_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `shipcstmr_name` varchar(128) NOT NULL,
+  `shipcstmr_mobile` varchar(32) NOT NULL,
+  `shipcstmr_profession` varchar(256) DEFAULT NULL,
+  `shipcstmr_streetadd` varchar(256) NOT NULL,
+  `shipcstmr_city` varchar(64) NOT NULL,
+  `shipcstmr_zip` varchar(6) NOT NULL,
+  `shipcstmr_country` varchar(64) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `subcategories`
+--
+
+CREATE TABLE `subcategories` (
+  `subcategory_id` int(11) NOT NULL COMMENT 'SUBCATEGORIES ID',
+  `category_id` int(11) NOT NULL,
+  `subcategory_name` varchar(128) NOT NULL,
+  `subcat_slug` varchar(255) NOT NULL,
+  `description` longtext NOT NULL,
+  `subcategory_status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `subcat_img` varchar(255) NOT NULL DEFAULT 'noimage.png',
+  `subcat_created_at` datetime DEFAULT current_timestamp(),
+  `subcat_updated_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Déchargement des données de la table `subcategories`
+--
+
+INSERT INTO `subcategories` (`subcategory_id`, `category_id`, `subcategory_name`, `subcat_slug`, `description`, `subcategory_status`, `subcat_img`, `subcat_created_at`, `subcat_updated_at`) VALUES
+(1, 1, 'Ordinateur', 'subcat-ordinateur', '', 'Active', 'noimage.png', '2024-04-01 00:27:10', NULL),
+(2, 2, 'TV', 'subcat-tv', '', 'Active', 'noimage.png', '2024-04-02 00:27:21', NULL),
+(3, 3, 'Congélateurs', 'subcat-congelateurs', '', 'Active', 'noimage.png', '2024-04-03 00:27:28', NULL),
+(4, 4, 'TÉLÉPHONE PORTABLE', 'subcat-t-l-phone-portable', 'TÉLÉPHONE PORTABLE', 'Active', 'noimage.png', '2024-05-15 17:18:17', '2024-05-15 17:18:17'),
+(5, 4, 'TABLETTES', 'subcat-tablettes', 'TABLETTES', 'Active', 'noimage.png', '2024-05-15 17:18:58', '2024-05-24 19:14:35'),
+(6, 5, 'Lait de corps', 'subcat-lait-de-corps', '', 'Active', 'noimage.png', '2024-06-10 19:40:02', '2024-06-10 19:40:02');
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `achat`
+--
+ALTER TABLE `achat`
+  ADD PRIMARY KEY (`achat_id`),
+  ADD KEY `customer_id` (`customer_id`,`product_id`);
+
+--
+-- Index pour la table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`ad_id`);
+
+--
+-- Index pour la table `brands`
+--
+ALTER TABLE `brands`
+  ADD PRIMARY KEY (`brand_id`);
+
+--
+-- Index pour la table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`cart_id`);
+
+--
+-- Index pour la table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_id`);
+
+--
+-- Index pour la table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`customer_id`);
+
+--
+-- Index pour la table `favoris`
+--
+ALTER TABLE `favoris`
+  ADD PRIMARY KEY (`wish_id`);
+
+--
+-- Index pour la table `newsletters`
+--
+ALTER TABLE `newsletters`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `customer_id` (`customer_id`);
+
+--
+-- Index pour la table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`oi_id`),
+  ADD KEY `customer_id` (`customer_id`),
+  ADD KEY `order_id` (`cart_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Index pour la table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`product_id`),
+  ADD KEY `category_id` (`category_id`),
+  ADD KEY `subcategory_id` (`subcategory_id`);
+
+--
+-- Index pour la table `shippings`
+--
+ALTER TABLE `shippings`
+  ADD PRIMARY KEY (`shipping_id`),
+  ADD KEY `customer_id` (`customer_id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
+-- Index pour la table `subcategories`
+--
+ALTER TABLE `subcategories`
+  ADD PRIMARY KEY (`subcategory_id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `achat`
+--
+ALTER TABLE `achat`
+  MODIFY `achat_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `brands`
+--
+ALTER TABLE `brands`
+  MODIFY `brand_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'BRAND ID', AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT pour la table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'CATEGORIES ID', AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT pour la table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'CUSTOMERS ID', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `favoris`
+--
+ALTER TABLE `favoris`
+  MODIFY `wish_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `newsletters`
+--
+ALTER TABLE `newsletters`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'NEWSLETTER ID';
+
+--
+-- AUTO_INCREMENT pour la table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ORDERS ID';
+
+--
+-- AUTO_INCREMENT pour la table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `oi_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ORDER ITEMS ID';
+
+--
+-- AUTO_INCREMENT pour la table `products`
+--
+ALTER TABLE `products`
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PRODUCTS ID', AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT pour la table `shippings`
+--
+ALTER TABLE `shippings`
+  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'SHIPPING ID';
+
+--
+-- AUTO_INCREMENT pour la table `subcategories`
+--
+ALTER TABLE `subcategories`
+  MODIFY `subcategory_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'SUBCATEGORIES ID', AUTO_INCREMENT=7;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`subcategory_id`) REFERENCES `subcategories` (`subcategory_id`) ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `subcategories`
+--
+ALTER TABLE `subcategories`
+  ADD CONSTRAINT `subcategories_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON UPDATE CASCADE;
+COMMIT;
